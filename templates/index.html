@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control de Presencia Fines de Semana</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Enlace al CSS externo (asegúrate de que exista style.css con el bloque abajo) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- ==== 1) Fondo de partículas ==== -->
+  <!-- Este DIV debe ir antes de todo tu contenido visible para que quede en el background -->
+  <div id="particles-js"></div>
+
+  <!-- ==== 2) Tu contenedor semitransparente con formulario/tabla ==== -->
+  <div class="contenedor-central">
+    <h1>Control de Presencia Fines de Semana</h1>
+
+    {% if error %}
+      <div class="alerta-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="form-carga-completa">
+      <div class="fila">
+        <div class="columna">
+          <label for="mes">Mes</label>
+          <select id="mes" name="mes" required>
+            <option value="" disabled selected>--Mes--</option>
+            {% for m,n in [
+              (1,'Enero'),(2,'Febrero'),(3,'Marzo'),
+              (4,'Abril'),(5,'Mayo'),(6,'Junio'),
+              (7,'Julio'),(8,'Agosto'),(9,'Septiembre'),
+              (10,'Octubre'),(11,'Noviembre'),(12,'Diciembre')
+            ] %}
+              <option value="{{m}}" {% if request.form.mes == m|string %}selected{% endif %}>
+                {{n}}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="columna">
+          <label for="anio">Año</label>
+          <input type="number" id="anio" name="anio"
+                 value="{{ request.form.anio or '' }}" min="2000" max="2100" required>
+        </div>
+        <div class="columna">
+          <label for="num_lideres"># Líderes</label>
+          <input type="number" id="num_lideres" name="num_lideres"
+                 value="{{ request.form.num_lideres or 2 }}" min="0">
+        </div>
+        <div class="columna">
+          <label for="num_pushers"># Pushers</label>
+          <input type="number" id="num_pushers" name="num_pushers"
+                 value="{{ request.form.num_pushers or 1 }}" min="0">
+        </div>
+        <div class="columna check-pusher">
+          <label>
+            <input type="checkbox" id="usar_pushers" name="usar_pushers" value="1"
+                   {% if request.form.usar_pushers %}checked{% endif %}>
+            Usar Pushers
+          </label>
+        </div>
+        <div class="columna">
+          <label for="modo_pusher">Modo Pusher</label>
+          <select id="modo_pusher" name="modo_pusher">
+            <option value="normal" {% if request.form.modo_pusher=='normal' %}selected{% endif %}>
+              Normal
+            </option>
+            <option value="obligatorio" {% if request.form.modo_pusher=='obligatorio' %}selected{% endif %}>
+              Obligatorio
+            </option>
+          </select>
+        </div>
+        <div class="columna">
+          <label for="filtro">Filtrar Rango</label>
+          <select id="filtro" name="filtro">
+            <option value="Todos" {% if request.form.filtro=='Todos' %}selected{% endif %}>Todos</option>
+            <option value="lider" {% if request.form.filtro=='lider' %}selected{% endif %}>lider</option>
+            <option value="pusher" {% if request.form.filtro=='pusher' %}selected{% endif %}>pusher</option>
+            <option value="facilitador" {% if request.form.filtro=='facilitador' %}selected{% endif %}>facilitador</option>
+            <option value="refuerzo" {% if request.form.filtro=='refuerzo' %}selected{% endif %}>refuerzo</option>
+            <option value="-" {% if request.form.filtro=='-' %}selected{% endif %}>Sin asignar</option>
+          </select>
+        </div>
+
+        <!-- Archivo de Personal (Excel) -->
+        <div class="columna-full">
+          <label for="file" class="label-instruccion">SUBE EL ARCHIVO DE PROGRAMACIÓN</label>
+          <input type="file" id="file" name="file" accept=".xls,.xlsx" required>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="columna-full">
+          <button type="submit" class="btn-cargar">Cargar y Mostrar</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- ==== 3) Si existe 'resultado', mostramos la tabla y botón de descarga ==== -->
+    {% if resultado %}
+      <div class="tabla-contenedor">
+        <h2>Resultado</h2>
+        {{ resultado | safe }}
+
+        {% if archivo %}
+          <a href="{{ url_for('descargar', nombre=archivo) }}" class="btn-descargar">
+            Descargar Excel
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ==== 4) Scripts de Particles.js ==== -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    /* Configuración mínima para que aparezcan partículas blancas conectadas */
+    particlesJS('particles-js',
+      {
+        "particles": {
+          "number": {
+            "value": 60,
+            "density": { "enable": true, "value_area": 800 }
+          },
+          "color": { "value": "#ffffff" },
+          "shape": {
+            "type": "circle",
+            "stroke": { "width": 0, "color": "#000000" }
+          },
+          "opacity": {
+            "value": 0.2,
+            "random": false,
+            "anim": { "enable": false }
+          },
+          "size": {
+            "value": 3,
+            "random": true,
+            "anim": { "enable": false }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#ffffff",
+            "opacity": 0.1,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 2,
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": { "enable": false }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": { "enable": true, "mode": "grab" },
+            "onclick": { "enable": true, "mode": "push" },
+            "resize": true
+          },
+          "modes": {
+            "grab": { "distance": 200, "line_linked": { "opacity": 0.3 } },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 0.8
+            },
+            "repulse": { "distance": 200 },
+            "push": { "particles_nb": 4 },
+            "remove": { "particles_nb": 2 }
+          }
+        },
+        "retina_detect": true
+      }
+    );
+  </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+/* ============================================================ */
+/* A) BODY y fondo de partículas                                 */
+/* ============================================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;         /* evitar scroll en el fondo de partículas */
+  background: #0a0f1d;      /* respaldo de fondo muy oscuro */
+  font-family: 'Arial', sans-serif;
+}
+
+#particles-js {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a0f1d;
+  z-index: 0;
+}
+
+/* ============================================================ */
+/* B) CONTENEDOR CENTRAL (tarjeta semitransparente)              */
+/* ============================================================ */
+.contenedor-central {
+  position: relative;
+  z-index: 1;
+
+  /* Ancho igual que antes */
+  width: 90%;
+  max-width: 900px;
+  margin: 2rem auto;            /* un pequeño margen superior e inferior */
+
+  /* Ya no usamos top/translateY, para que no se “corte” en pantallas bajas */
+
+  /* Fondo semitransparente oscuro */
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+
+  color: #f2f2f2;
+  text-align: center;
+
+  /* ===================
+     Límite de altura
+     =================== */
+  max-height: 90vh;    /* No pasará del 90% de la altura de la ventana */
+  overflow-y: auto;   /* Si el contenido es muy grande, aparece scroll interno */
+}
+
+/* ============================================================ */
+/* C) ALERTA DE ERROR (barra roja)                               */
+/* ============================================================ */
+.alerta-error {
+  background-color: #ff4d4f;         /* rojo intenso */
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================ */
+/* D) FORMULARIO COMPLETO (fila y columnas)                      */
+/* ============================================================ */
+.form-carga-completa .fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.form-carga-completa .columna {
+  flex: 1 1 calc(33.333% - 1rem);
+  min-width: 200px;
+}
+.form-carga-completa .columna-full {
+  flex: 1 1 100%;
+}
+.form-carga-completa .check-pusher {
+  align-self: flex-end;
+}
+
+.form-carga-completa label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-carga-completa input,
+.form-carga-completa select,
+.form-carga-completa button {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 1rem;
+  background: rgba(20, 25, 35, 0.9);
+  color: #f0f0f5;
+  outline: none;
+  transition: background 0.3s ease, border 0.3s ease;
+}
+.form-carga-completa input:focus,
+.form-carga-completa select:focus {
+  background: rgba(20, 25, 35, 1);
+  border: 1px solid #06b6d4;
+}
+.form-carga-completa select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path fill='%23f0f0f5' d='M1 1l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 12px 8px;
+}
+/* Botón “Cargar y Mostrar” */
+.form-carga-completa button.btn-cargar {
+  background-color: #06b6d4;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+.form-carga-completa button.btn-cargar:hover {
+  background-color: #0e9aa7;
+}
+/* Input file */
+.form-carga-completa input[type="file"] {
+  cursor: pointer;
+}
+.form-carga-completa input[type="file"]::-webkit-file-upload-button {
+  background: #2c3446;
+  color: #e0e0e5;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.form-carga-completa input[type="file"]::-webkit-file-upload-button:hover {
+  background: #3a4258;
+}
+
+/* ============================================================ */
+/* E) TABLA RESULTANTE                                           */
+/* ============================================================ */
+.tabla-contenedor {
+  margin-top: 2rem;
+  overflow-x: auto;
+  text-align: left;
+}
+.tabla-contenedor table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(20, 25, 35, 0.9);
+  color: #f2f2f2;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.tabla-contenedor th {
+  padding: 0.75rem 1rem;
+  background: rgba(30, 35, 45, 0.95);
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tabla-contenedor td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+}
+.tabla-contenedor tr:nth-child(even) {
+  background: rgba(20, 25, 35, 0.85);
+}
+
+/* ============================================================ */
+/* F) BOTÓN “Descargar Excel”                                     */
+/* ============================================================ */
+.btn-descargar {
+  display: inline-block;
+  margin-top: 1rem;
+  background-color: #10b981;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+.btn-descargar:hover {
+  background-color: #059669;
+}
+
+/* ============================================================ */
+/* G) RESPONSIVE (adaptaciones para pantallas pequeñas)          */
+/* ============================================================ */
+@media (max-width: 768px) {
+  .form-carga-completa .columna {
+    flex: 1 1 calc(50% - 1rem);
+  }
+  .contenedor-central {
+    /* Reducimos algo el padding cuando el ancho sea menor */
+    padding: 1.5rem 1rem;
+    margin: 1rem auto;
+  }
+}
+@media (max-width: 576px) {
+  .form-carga-completa .columna {
+    flex: 1 1 100%;
+  }
+  .contenedor-central h1 {
+    font-size: 1.6rem;
+  }
+  .form-carga-completa button.btn-cargar,
+  .btn-descargar {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ================================================ */
+/* H) Scrollbar casi invisible para .contenedor-central */
+/* ================================================ */
+/* WebKit browsers (Chrome, Safari, Edge) */
+.contenedor-central::-webkit-scrollbar {
+  width: 6px;                    /* muy delgada */
+}
+
+.contenedor-central::-webkit-scrollbar-track {
+  background: transparent;       /* pista transparente */
+}
+
+.contenedor-central::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15); /* blanco semitransparente */
+  border-radius: 3px;            /* bordes redondeados */
+}
+
+/* Firefox */
+.contenedor-central {
+  scrollbar-width: thin;         /* scrollbar más fina */
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+/* Opcional: al hacer hover sobre el contenedor, el thumb se vuelve un poco más visible */
+.contenedor-central:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.30);
+}
+.contenedor-central:hover {
+  scrollbar-color: rgba(255, 255, 255, 0.30) transparent;
+}
